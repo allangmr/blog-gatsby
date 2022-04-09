@@ -15,9 +15,19 @@ import "./layout.css"
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
+      allSite {
+        nodes {
+          siteMetadata {
+            title
+          }
+        }
+      }
+      allMdx(sort: { fields: [frontmatter___title], order: ASC }) {
+        nodes {
+          slug
+          frontmatter {
+            title
+          }
         }
       }
     }
@@ -25,7 +35,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
+      <Header siteTitle={data.allSite?.nodes} posts={data.allMdx?.nodes} />
       <div
         style={{
           margin: `0 auto`,
